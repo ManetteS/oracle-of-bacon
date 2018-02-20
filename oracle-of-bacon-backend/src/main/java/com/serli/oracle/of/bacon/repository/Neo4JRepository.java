@@ -1,6 +1,5 @@
 package com.serli.oracle.of.bacon.repository;
 
-
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
@@ -31,16 +30,14 @@ public class Neo4JRepository {
 
     public List<GraphItem> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
-        
-        // Oracle request : MATCH (kevin {name:"Bacon, Kevin (I)"}) MATCH (actor {name:<actor name>}) MATCH path = shortestPath( (kevin)-[:PLAYED_IN*]-(actor) ) RETURN path
-        
+
         Statement statement =
             new Statement('MATCH (kevin {name:"Bacon, Kevin (I)"}) MATCH (actor {name:' + actorName + '}) MATCH path = shortestPath( (kevin)-[:PLAYED_IN*]-(actor) ) RETURN path');
         StatementResult result = session.run(statement);
         Record record = result.single();
         Iterable<Value> nodes = record.get(0).values();
         Iterable<Value> relationships = record.get(1).values();
-        
+
         List<GraphItem> result = new ArrayList<>();
         for (Value node : nodes) {
             if (node.asNode().hasLabel("title")) {
@@ -52,7 +49,7 @@ public class Neo4JRepository {
         for (Value relationship : relationships) {
             result.add(new GraphNode(relationship.asRelationship().id(), relationship.startNodeId(), relationship.endNodeId(), "PLAYED_IN");
         }
-        
+
         return result;
     }
 
@@ -93,10 +90,10 @@ public class Neo4JRepository {
 
         @Override
         public String toJson() {
-            String json = "{\n";
+            String json = '{\n';
             json += '"id": ' + String.valueOf(id) + ',\n';
-            json += '"type": \"' + type + '\",\n';
-            json += '"value": \"' + value + '\"\n}';
+            json += '"type": "' + type + '",\n';
+            json += '"value": "' + value + '"\n}';
             return json;
         }
     }
@@ -115,11 +112,11 @@ public class Neo4JRepository {
 
         @Override
         public String toJson() {
-            String json = "{\n";
+            String json = '{\n';
             json += '"id": ' + String.valueOf(id) + ',\n';
             json += '"source": ' + String.valueOf(source) + ',\n';
             json += '"target": ' + String.valueOf(target) + ',\n';
-            json += '"value": \"' + value + '\"\n}';
+            json += '"value": "' + value + '"\n}';
             return json;
         }
     }
