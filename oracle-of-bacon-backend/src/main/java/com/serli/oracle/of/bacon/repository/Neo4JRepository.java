@@ -4,8 +4,13 @@ package com.serli.oracle.of.bacon.repository;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
+import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
+import org.neo4j.driver.v1.Statement;
+import org.neo4j.driver.v1.StatementResult;
+import org.neo4j.driver.v1.Value;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -26,10 +31,29 @@ public class Neo4JRepository {
 
     public List<GraphItem> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
-
-        // TODO implement Oracle of Bacon
+        
         // Oracle request : MATCH (kevin {name:"Bacon, Kevin (I)"}) MATCH (actor {name:<actor name>}) MATCH path = shortestPath( (kevin)-[:PLAYED_IN*]-(actor) ) RETURN path
-        return null;
+        
+        Statement statement =
+            new Statement('MATCH (kevin {name:"Bacon, Kevin (I)"}) MATCH (actor {name:' + actorName + '}) MATCH path = shortestPath( (kevin)-[:PLAYED_IN*]-(actor) ) RETURN path');
+        StatementResult result = session.run(statement);
+        Record record = result.single();
+        Iterable<Value> nodes = record.get(0).values();
+        Iterable<Value> relationships = record.get(1).values();
+        
+        List<GraphItem> result = new ArrayList<>();
+        for (Value node : nodes) {
+            if (node.asNode().hasLabel("title")) {
+                result.add(new GraphNode(node.asNode().id(), node.get("title").asString(), "Movie");
+            } else {
+                result.add(new GraphEdge(node.asNode().id(), node.get("name").asString(), "Actor");
+            }
+        }
+        for (Value relationship : relationships) {
+            result.add(new GraphNode(relationship.asRelationship().id(), relationship.startNodeId(), relationship.endNodeId(), "PLAYED_IN");
+        }
+        
+        return result;
     }
 
     public static abstract class GraphItem {
