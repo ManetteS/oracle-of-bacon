@@ -78,15 +78,12 @@ public class APIEndPoint {
 
     @Get("last-searches")
     public List<String> last10Searches() {
-        return Arrays.asList("Peckinpah, Sam",
-                "Robbins, Tim (I)",
-                "Freeman, Morgan (I)",
-                "De Niro, Robert",
-                "Pacino, Al (I)");
+        return redisRepository.getLastTenSearches();
     }
 
     @Get("actor?name=:actorName")
     public String getActorByName(String actorName) {
+        redisRepository.addLastReseach(actorName);
         return "{\n" +
                 "\"_id\": {\n" +
                 "\"$oid\": \"587bd993da2444c943a25161\"\n" +

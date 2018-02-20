@@ -11,8 +11,14 @@ public class RedisRepository {
         this.jedis = new Jedis("localhost");
     }
 
-    public List<String> getLastTenSearches() {
-        // TODO implement last 10 searchs
-        return null;
+    public void addLastReseach(String last) {
+        jedis.lpush("lastTen", last);
+        if (jedis.llen("lastTen") > 10) {
+            jedis.rpop("lastTen");
+        }
+    }
+
+    public List<String> getLastTenSearches() {        
+        return jedis.lrange("lastTen", 0, 10);
     }
 }
