@@ -25,7 +25,7 @@ public class APIEndPoint {
 
     @Get("bacon-to?actor=:actorName")
     public String getConnectionsToKevinBacon(String actorName) {
-
+        redisRepository.addLastReseach(actorName);
         return "[\n" +
                 "{\n" +
                 "\"data\": {\n" +
