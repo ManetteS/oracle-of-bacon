@@ -25,32 +25,32 @@ public class Neo4JRepository {
     private final Driver driver;
 
     public Neo4JRepository() {
-        this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "password"));
+        this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "neo4j1"));
     }
 
     public List<GraphItem> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
 
         Statement statement =
-            new Statement('MATCH (kevin {name:"Bacon, Kevin (I)"}) MATCH (actor {name:' + actorName + '}) MATCH path = shortestPath( (kevin)-[:PLAYED_IN*]-(actor) ) RETURN path');
+            new Statement("MATCH (kevin {name:\"Bacon, Kevin (I)\"}) MATCH (actor {name:\"" + actorName + "\"}) MATCH path = shortestPath( (kevin)-[:PLAYED_IN*]-(actor) ) RETURN nodes(path), relationships(path)");
         StatementResult result = session.run(statement);
         Record record = result.single();
         Iterable<Value> nodes = record.get(0).values();
         Iterable<Value> relationships = record.get(1).values();
 
-        List<GraphItem> result = new ArrayList<>();
+        List<GraphItem> items = new ArrayList<>();
         for (Value node : nodes) {
-            if (node.asNode().hasLabel("title")) {
-                result.add(new GraphNode(node.asNode().id(), node.get("title").asString(), "Movie");
+            if (node.asNode().containsKey("title")) {
+                items.add(new GraphNode(node.asNode().id(), node.get("title").asString(), "Movie"));
             } else {
-                result.add(new GraphEdge(node.asNode().id(), node.get("name").asString(), "Actor");
+                items.add(new GraphNode(node.asNode().id(), node.get("name").asString(), "Actor"));
             }
         }
         for (Value relationship : relationships) {
-            result.add(new GraphNode(relationship.asRelationship().id(), relationship.startNodeId(), relationship.endNodeId(), "PLAYED_IN");
+            items.add(new GraphEdge(relationship.asRelationship().id(), relationship.asRelationship().startNodeId(), relationship.asRelationship().endNodeId(), "PLAYED_IN"));
         }
 
-        return result;
+        return items;
     }
 
     public static abstract class GraphItem {
@@ -90,10 +90,10 @@ public class Neo4JRepository {
 
         @Override
         public String toJson() {
-            String json = '{\n';
-            json += '"id": ' + String.valueOf(id) + ',\n';
-            json += '"type": "' + type + '",\n';
-            json += '"value": "' + value + '"\n}';
+            String json = "{\n";
+            json += "\"id\": " + String.valueOf(id) + ",\n";
+            json += "\"type\": \"" + type + "\",\n";
+            json += "\"value\": \"" + value + "\"\n}";
             return json;
         }
     }
@@ -112,11 +112,11 @@ public class Neo4JRepository {
 
         @Override
         public String toJson() {
-            String json = '{\n';
-            json += '"id": ' + String.valueOf(id) + ',\n';
-            json += '"source": ' + String.valueOf(source) + ',\n';
-            json += '"target": ' + String.valueOf(target) + ',\n';
-            json += '"value": "' + value + '"\n}';
+            String json = "{\n";
+            json += "\"id\": " + String.valueOf(id) + ",\n";
+            json += "\"source\": " + String.valueOf(source) + ",\n";
+            json += "\"target\": " + String.valueOf(target) + ",\n";
+            json += "\"value\": \"" + value + "\"\n}";
             return json;
         }
     }

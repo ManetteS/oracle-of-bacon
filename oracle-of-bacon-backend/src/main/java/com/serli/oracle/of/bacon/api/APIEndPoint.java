@@ -23,12 +23,12 @@ public class APIEndPoint {
         mongoDbRepository = new MongoDbRepository();
     }
 
-    private String writeJson(List<neo4JRepository.GraphItem> graph) {
-        String json = '[\n';
-        for (GraphItem item : graph) {
-            json += '{\n"data": ' + item.toJson() + '\n},\n';
+    private String writeJson(List<Neo4JRepository.GraphItem> graph) {
+        String json = "[\n";
+        for (Neo4JRepository.GraphItem item : graph) {
+            json += "{\n\"data\": " + item.toJson() + "\n},\n";
         }
-        return json.substring(0, json.length()-2) + '\n]';
+        return json.substring(0, json.length()-2) + "\n]";
     }
 
     @Get("bacon-to?actor=:actorName")
