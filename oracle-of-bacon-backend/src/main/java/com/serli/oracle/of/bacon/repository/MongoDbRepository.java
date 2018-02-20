@@ -6,15 +6,20 @@ import org.bson.Document;
 
 import java.util.Optional;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public class MongoDbRepository {
+    private final String HOST = "localhost";
+    private final String WORKSHOP = "workshop";
+    private final String ACTORS = "actors";
+    private final String NAME = "name";
     private final MongoCollection<Document> actorCollection;
 
     public MongoDbRepository() {
-        this.actorCollection= new MongoClient("localhost", 27017).getDatabase("workshop").getCollection("actors");
+        this.actorCollection = new MongoClient(HOST, 27017).getDatabase(WORKSHOP).getCollection(ACTORS);
     }
 
     public Optional<Document> getActorByName(String name) {
-        // TODO implement actor fetch
-        return null;
+        return Optional.ofNullable(collection.find(eq(NAME, name)).first());
     }
 }
