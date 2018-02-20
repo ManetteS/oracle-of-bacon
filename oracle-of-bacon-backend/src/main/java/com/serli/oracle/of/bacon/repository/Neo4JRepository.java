@@ -8,6 +8,15 @@ import org.neo4j.driver.v1.Session;
 
 import java.util.List;
 
+/*
+ * Command line to import the database :
+ * bin/neo4j-admin import
+ *  --nodes:Actor ../oracle-of-bacon/imdb-data/actors.csv
+ *  --nodes:Movie ../oracle-of-bacon/imdb-data/movies.csv
+ *  --relationships ../oracle-of-bacon/imdb-data/roles.csv
+ *  --ignore-missing-nodes=true
+ *  --ignore-duplicate-nodes=true
+ */
 public class Neo4JRepository {
     private final Driver driver;
 
@@ -19,6 +28,7 @@ public class Neo4JRepository {
         Session session = driver.session();
 
         // TODO implement Oracle of Bacon
+        // Oracle request : MATCH (kevin {name:"Bacon, Kevin (I)"}) MATCH (actor {name:<actor name>}) MATCH path = shortestPath( (kevin)-[:PLAYED_IN*]-(actor) ) RETURN path
         return null;
     }
 
