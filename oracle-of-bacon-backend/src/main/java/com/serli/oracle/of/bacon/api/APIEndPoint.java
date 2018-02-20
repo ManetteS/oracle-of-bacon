@@ -23,10 +23,19 @@ public class APIEndPoint {
         mongoDbRepository = new MongoDbRepository();
     }
 
+    private String writeJson(List<neo4JRepository.GraphItem> graph) {
+        String json = "[\n";
+        for (GraphItem item : graph) {
+            json += "{\n\"data\": " + item.toJson() + '\n},\n';
+        }
+        return json.substring(0, json.length()-2) + "\n]";
+    }
+
     @Get("bacon-to?actor=:actorName")
     public String getConnectionsToKevinBacon(String actorName) {
-
-        return "[\n" +
+        List<neo4JRepository.GraphItem> graph = neo4JRepository.getConnectionsToKevinBacon(actorName);
+        return writeJson(graph);
+        /*return "[\n" +
                 "{\n" +
                 "\"data\": {\n" +
                 "\"id\": 85449,\n" +
@@ -64,7 +73,7 @@ public class APIEndPoint {
                 "\"value\": \"PLAYED_IN\"\n" +
                 "}\n" +
                 "}\n" +
-                "]";
+                "]";*/
     }
 
     @Get("suggest?q=:searchQuery")

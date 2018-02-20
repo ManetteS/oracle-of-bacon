@@ -24,7 +24,7 @@ public class Neo4JRepository {
         this.driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "password"));
     }
 
-    public List<?> getConnectionsToKevinBacon(String actorName) {
+    public List<GraphItem> getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
 
         // TODO implement Oracle of Bacon
@@ -38,6 +38,8 @@ public class Neo4JRepository {
         private GraphItem(long id) {
             this.id = id;
         }
+
+        abstract public String toJson();
 
         @Override
         public boolean equals(Object o) {
@@ -64,6 +66,15 @@ public class Neo4JRepository {
             this.value = value;
             this.type = type;
         }
+
+        @Override
+        public String toJson() {
+            String json = "{\n";
+            json += '"id": ' + String.valueOf(id) + ',\n';
+            json += '"type": \"' + type + '\",\n';
+            json += '"value": \"' + value + '\"\n}';
+            return json;
+        }
     }
 
     private static class GraphEdge extends GraphItem {
@@ -76,6 +87,16 @@ public class Neo4JRepository {
             this.source = source;
             this.target = target;
             this.value = value;
+        }
+
+        @Override
+        public String toJson() {
+            String json = "{\n";
+            json += '"id": ' + String.valueOf(id) + ',\n';
+            json += '"source": ' + String.valueOf(source) + ',\n';
+            json += '"target": ' + String.valueOf(target) + ',\n';
+            json += '"value": \"' + value + '\"\n}';
+            return json;
         }
     }
 }
