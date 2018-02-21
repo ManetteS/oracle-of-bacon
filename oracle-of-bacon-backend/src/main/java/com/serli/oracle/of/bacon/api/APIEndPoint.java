@@ -9,10 +9,9 @@ import net.codestory.http.annotations.Get;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.bson.Document;
-
-import java.util.Optional;
 
 public class APIEndPoint {
     private final Neo4JRepository neo4JRepository;
@@ -32,7 +31,7 @@ public class APIEndPoint {
         for (Neo4JRepository.GraphItem item : graph) {
             json += "{\n\"data\": " + item.toJson() + "\n},\n";
         }
-        return json.substring(0, json.length()-2) + "\n]";
+        return json.substring(0, json.length() - 2) + "\n]";
     }
 
     @Get("bacon-to?actor=:actorName")
