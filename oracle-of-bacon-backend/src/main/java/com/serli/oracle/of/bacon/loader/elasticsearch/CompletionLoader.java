@@ -34,7 +34,8 @@ public class CompletionLoader {
 		            .lines()
 		            .skip(1)
 		            .forEach(line -> {
-		               // System.out.println(line);
+                       // System.out.println(line);
+                        line.substring(1, line.length()-1);
 			            count.incrementAndGet();
 		                bulker.add(count.get(), line, "actors","actor","name");
 			           // bulker.add(count.get(), line);
