@@ -32,6 +32,6 @@ public class MongoDbRepository {
     }
 
     public Optional<Document> getActorByName(String name) {
-        return Optional.ofNullable(collection.find(eq(NAME, name)).first());
+        return Optional.ofNullable(actorCollection.find(eq(NAME, name)).first());
     }
 }

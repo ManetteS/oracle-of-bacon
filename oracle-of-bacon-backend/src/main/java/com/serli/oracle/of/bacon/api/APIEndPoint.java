@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bson.Document;
+
+import java.util.Optional;
+
 public class APIEndPoint {
     private final Neo4JRepository neo4JRepository;
     private final ElasticSearchRepository elasticSearchRepository;
@@ -33,7 +37,7 @@ public class APIEndPoint {
 
     @Get("bacon-to?actor=:actorName")
     public String getConnectionsToKevinBacon(String actorName) {
-        redisRepository.addLastReseach(actorName);
+        redisRepository.addLastResearch(actorName);
         return writeJson(neo4JRepository.getConnectionsToKevinBacon(actorName));
     }
 
@@ -53,7 +57,7 @@ public class APIEndPoint {
 
     @Get("actor?name=:actorName")
     public String getActorByName(String actorName) {
-        redisRepository.addLastReseach(actorName);
+        redisRepository.addLastResearch(actorName);
         Optional<Document> opt = mongoDbRepository.getActorByName(actorName);
         if (opt.isPresent()) {
             Document doc = opt.get();
