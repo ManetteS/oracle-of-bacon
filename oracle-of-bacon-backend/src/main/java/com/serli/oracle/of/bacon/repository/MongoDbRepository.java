@@ -22,13 +22,13 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class MongoDbRepository {
     private final String HOST = "localhost";
-    private final String WORKSHOP = "workshop";
-    private final String ACTORS = "actors";
+    private final String DATABASE = "actors";
+    private final String COLLECTION = "actors";
     private final String NAME = "name:ID";
     private final MongoCollection<Document> actorCollection;
 
     public MongoDbRepository() {
-        this.actorCollection = new MongoClient(HOST, 27017).getDatabase(WORKSHOP).getCollection(ACTORS);
+        this.actorCollection = new MongoClient(HOST, 27017).getDatabase(DATABASE).getCollection(COLLECTION);
     }
 
     public Optional<Document> getActorByName(String name) {

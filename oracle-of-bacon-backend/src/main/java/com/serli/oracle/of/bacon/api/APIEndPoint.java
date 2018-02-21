@@ -57,7 +57,6 @@ public class APIEndPoint {
 
     @Get("actor?name=:actorName")
     public String getActorByName(String actorName) {
-        redisRepository.addLastResearch(actorName);
         Optional<Document> opt = mongoDbRepository.getActorByName(actorName);
         if (opt.isPresent()) {
             Document doc = opt.get();
